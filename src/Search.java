@@ -1,52 +1,57 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Search extends JFrame {
-    private JTextField searchNIK;
-    private JButton searchButton;
+    private JTextField txtNIK;
+    private JButton btnCari;
 
     public Search() {
-        setTitle("Search Data Penduduk");
+        setTitle("Pencarian Data");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(3, 1, 10, 10));
+        setLayout(new GridLayout(2, 1));
 
-        searchNIK = new JTextField();
-        searchButton = new JButton("Cari");
+        txtNIK = new JTextField();
+        btnCari = new JButton("Cari");
+
+        btnCari.addActionListener(e -> searchData());
 
         add(new JLabel("Masukkan NIK:"));
-        add(searchNIK);
-        add(searchButton);
+        add(txtNIK);
+        add(btnCari);
+    }
 
-        // Tombol Cari
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try (Connection connection = DatabaseConnection.getConnection()) {
-                    String query = "SELECT * FROM data_ktp WHERE NIK = ?";
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setString(1, searchNIK.getText());
-                    ResultSet resultSet = statement.executeQuery();
-                    if (resultSet.next()) {
-                        // Jika ditemukan, buka halaman Perekaman dengan data terisi
-                        Search search = new Search();
-                        search.setVisible(true);
-                        dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Data tidak ditemukan!");
-                    }
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+    void searchData() {
+        String nik = txtNIK.getText();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM data_ktp WHERE NIK = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, nik);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                GUI perekaman = new GUI();
+                perekaman.setData(
+                    rs.getString("NIK"),
+                    rs.getString("nama"),
+                    rs.getString("tempat_lahir"),
+                    rs.getString("alamat"),
+                    rs.getString("rt_rw"),
+                    rs.getString("kel_desa"),
+                    rs.getString("kecamatan"),
+                    rs.getString("agama"),
+                    rs.getString("status_perkawinan")
+                );
+                perekaman.setVisible(true);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Data tidak ditemukan!");
             }
-        });
-
-        setVisible(true);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + ex.getMessage());
+        }
     }
 }

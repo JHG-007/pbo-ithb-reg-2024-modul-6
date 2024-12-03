@@ -1,39 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainMenu extends JFrame {
     public MainMenu() {
         setTitle("Main Menu");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(3, 1, 10, 10));
+        setLayout(new GridLayout(3, 1));
 
-        JButton recordButton = new JButton("record");
-        JButton searchButton = new JButton("search");
-        JButton exitButton = new JButton("Exit");
+        JButton btnPerekaman = new JButton("Perekaman");
+        JButton btnPencarian = new JButton("Pencarian");
+        JButton btnExit = new JButton("Exit");
 
-        add(recordButton);
-        add(searchButton);
-        add(exitButton);
-
-        recordButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Record();
-                dispose();
-            }
+        btnPerekaman.addActionListener(e -> {
+            GUI perekaman = new GUI();
+            perekaman.setVisible(true);
+            dispose();
         });
 
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Search();
-                dispose();
-            }
+        btnPencarian.addActionListener(e -> {
+            Search search = new Search();
+            search.setVisible(true);
+            dispose();
         });
-        exitButton.addActionListener(e -> System.exit(0));
+
+        btnExit.addActionListener(e -> System.exit(0));
+
+        add(btnPerekaman);
+        add(btnPencarian);
+        add(btnExit);
     }
 
     public static void main(String[] args) {

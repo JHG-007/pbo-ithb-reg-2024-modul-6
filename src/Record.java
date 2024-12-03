@@ -80,7 +80,7 @@ public class Record extends JFrame {
 
         // Agama
         add(new JLabel("Agama:"));
-        agama = new JComboBox<>(new String[]{"Islam", "Kristen", "Hindu", "Budha", "Konghucu"});
+        agama = new JComboBox<>(new String[]{"Islam", "Kristen","Katolik", "Hindu", "Budha", "Konghucu"});
         add(agama);
 
         // Status Perkawinan
@@ -132,7 +132,7 @@ public class Record extends JFrame {
                     return;
                 }
                 try (Connection connection = DatabaseConnection.getConnection()) {
-                    String sql = "INSERT INTO data_ktp (NIK, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, golongan_darah, " +
+                    String sql = "INSERT INTO ktp_db (NIK, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, golongan_darah, " +
                             "alamat, rt_rw, kelurahan, kecamatan, agama, status_perkawinan, kewarganegaraan, berlaku_hingga, " +
                             "kota_pembuatan, tanggal_pembuatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     PreparedStatement statement = connection.prepareStatement(sql);
